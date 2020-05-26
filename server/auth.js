@@ -3,7 +3,6 @@ require('url')
 const querystring = require('querystring')
 const passport = require('passport')
 const express = require('express')
-
 const router = express.Router()
 
 // GET /login

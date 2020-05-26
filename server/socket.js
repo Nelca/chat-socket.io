@@ -46,6 +46,7 @@ const initializeSocket = (http, sessionMiddleware) => {
         roomId,
         author: userId,
         authorIcon: icon,
+        sound: data.sound,
       }
       try {
         socket.broadcast.to(roomId).emit('send-message', message)

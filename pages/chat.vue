@@ -31,7 +31,7 @@
     <v-app-bar app bottom fixed height="80">
       <v-container style="padding: 0; margine: 0;">
         <v-row justify="center" align="center">
-          <v-col cols="11" md="7" xl="4">
+          <v-col cols="6">
             <v-text-field
               v-model="text"
               solo
@@ -43,6 +43,31 @@
           <v-col cols="1">
             <v-btn fab elevation="3" color="primary" @click="onPost">
               <v-icon>mdi-send</v-icon>
+            </v-btn>
+          </v-col>
+          <v-col cols="1">
+            <v-btn fab elevation="3" color="primary" @click="onPostSound(1)">
+              👏
+            </v-btn>
+          </v-col>
+          <v-col cols="1">
+            <v-btn fab elevation="3" color="primary" @click="onPostSound(2)">
+              ｳｵｫｫ!!
+            </v-btn>
+          </v-col>
+          <v-col cols="1">
+            <v-btn fab elevation="3" color="primary" @click="onPostSound(3)">
+              😂
+            </v-btn>
+          </v-col>
+          <v-col cols="1">
+            <v-btn fab elevation="3" color="primary" @click="onPostSound(4)">
+              ェ(ﾟДﾟ)ェ
+            </v-btn>
+          </v-col>
+          <v-col cols="1">
+            <v-btn fab elevation="3" color="primary" @click="onPostSound(5)">
+              🤯
             </v-btn>
           </v-col>
         </v-row>
@@ -82,6 +107,11 @@ export default {
       this.messages = messages
     },
     recieveMessage(message) {
+      if (message.sound) {
+        const sound = document.createElement('audio')
+        sound.src = message.sound
+        sound.play()
+      }
       this.messages.push(message)
     },
     onPost() {
@@ -95,6 +125,50 @@ export default {
         this.socket.emit('send-message', message)
         this.text = null
       }
+    },
+    onPostSound(soundNumber) {
+      let text = ''
+      let sound = ''
+      switch (soundNumber) {
+        case 1:
+          text = '👏'
+          sound =
+            'https://soundeffect-lab.info/sound/voice/mp3/people/people-performance-cheer2.mp3'
+          break
+
+        case 2:
+          text = 'Woooooow!!'
+          sound =
+            'https://soundeffect-lab.info/sound/voice/mp3/people/people-stadium-cheer2.mp3'
+          break
+
+        case 3:
+          text = '😂'
+          sound =
+            'https://soundeffect-lab.info/sound/voice/mp3/people/people-studio-laugh-large2.mp3'
+          break
+
+        case 4:
+          text = 'ェ(ﾟДﾟ)ェ'
+          sound =
+            'https://soundeffect-lab.info/sound/voice/mp3/people/people-studio-ee1.mp3'
+          break
+
+        case 5:
+          text = '🤯'
+          sound = 'https://soundeffect-lab.info/sound/battle/mp3/bomb1.mp3'
+          break
+
+        default:
+          break
+      }
+      const message = {
+        text,
+        roomId: this.$route.query.roomId,
+        sound,
+      }
+      this.socket.emit('send-message', message)
+      this.text = null
     },
     format(timestamp) {
       return moment(timestamp.seconds * 1000).format('YYYY/MM/DD HH:mm:ss')
